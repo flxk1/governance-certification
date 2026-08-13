@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://loomground.org/attestations/GovernanceCertification/v1/schema.json",
+  "title": "GovernanceCertification predicate v1",
+  "description": "An in-toto predicate (predicateType https://loomground.org/attestations/GovernanceCertification/v1). It rides a DSSE-signed in-toto Statement whose `subject` is the governed action (name + sha256 digest of the action envelope). It asserts that, AT THE MOMENT IT ACTED, a specific AI action was simultaneously grounded AND overseen AND enforced AND intact AND legitimate. The `enforced` pillar is load-bearing: this predicate is only issuable because the action passed through a runtime gate that would OTHERWISE have blocked it. Possessing a valid, signed instance is therefore evidence the governance happened, not a claim that it did. Everything mechanical is composed: DSSE + in-toto (envelope/transport), Ed25519 + RFC 8785 (signing/canonicalisation), the grounding SCHEME (5d+nd / prov-o / uri-span — pluggable). The ONLY thing this schema owns is the shape of the five pillars.",
+  "type": "object",
+  "required": ["verdict", "action_class", "enforced", "overseen", "grounded", "intact", "legitimate", "issued_at"],
+  "additionalProperties": false,
+  "properties": {
+    "verdict": {
+      "description": "The governed outcome that PRODUCED this certification. A `deny` produces no certification (there was nothing to certify but a refusal); only these two outcomes mint one.",
+      "enum": ["permit", "hold-approved"]
+    },
+    "action_class": {
+      "description": "The action's governed class (e.g. shell.exec, fs.write, mcp.<server>.<tool>). The full action body is the in-toto Statement `subject`, digest-bound.",
+      "type": "string"
+    },
+    "issued_at": {
+      "description": "RFC 3339 UTC timestamp the certification was minted (at gate time).",
+      "type": "string",
+      "format": "date-time"
+    },
+
+    "enforced": {
+      "description": "THE load-bearing pillar. Attests the action was blocked-unless-permitted at runtime — not merely evaluated. Without this being true and mechanism-named, the artifact is a claim, not proof.",
+      "type": "object",
+      "required": ["mechanism", "blocked_unless_permitted", "decision_ref"],
+      "additionalProperties": false,
+      "properties": {
+        "mechanism": {
+          "description": "The gate that would have blocked the action (e.g. 'claude-code:PreToolUse', 'resource-server:web-bot-auth'). Names WHERE enforcement bit.",
+          "type": "string"
+        },
+        "blocked_unless_permitted": {
+          "description": "MUST be true. A certification whose gate could not actually block is not enforcement-bound and must not be issued.",
+          "const": true
+        },
+        "decision_ref": {
+          "description": "Identifier of the gate decision (the chokepoint's audit id) this certification was minted from.",
+          "type": "string"
+        }
+      }
+    },
+
+    "overseen": {
+      "description": "The human-oversight pillar — an oversight-certificate (its own repo; already DSSE, so it embeds as an in-toto-compatible sub-attestation). For verdict `permit` a human step may be absent (grade permitted it); for `hold-approved` it MUST be present.",
+      "type": "object",
+      "required": ["required"],
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "description": "Whether a human oversight step was required for this action.",
+          "type": "boolean"
+        },
+        "disposition": {
+          "description": "The oversight-certificate disposition when a human acted. Refuse-to-decide (ABSTAINED) is first-class.",
+          "enum": ["DECIDED", "ESCALATED", "ABSTAINED"]
+        },
+        "qualifier": {
+          "description": "Identifier/role of the qualified human, as attested by the oversight-certificate (never raw PII — a stable pseudonymous id).",
+          "type": "string"
+        },
+        "oversight_certificate": {
+          "description": "The embedded oversight-certificate DSSE envelope, OR a digest reference to it. Re-checkable offline from its own public key.",
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "required": { "const": true } } },
+          "then": { "required": ["disposition", "oversight_certificate"] }
+        }
+      ]
+    },
+
+    "grounded": {
+      "description": "The provenance pillar — the verdict rests on a cited span, addressed in a PLUGGABLE scheme. `scheme` is a URI (5d+nd / prov-o / uri-span / 7d+nd …); `digest` lets any verifier re-check without understanding the scheme; `evidence` optionally inlines the resolved span for cross-boundary verification. Ungrounded (absent ref) is not certifiable.",
+      "type": "object",
+      "required": ["scheme", "ref", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "scheme": {
+          "description": "URI naming the grounding scheme. The certification does not privilege any one; a verifier resolves it via whatever understands that vocabulary.",
+          "type": "string",
+          "format": "uri"
+        },
+        "ref": {
+          "description": "The scheme-specific span/coordinate. Opaque to the certification (like an in-toto subject name)."
+        },
+        "digest": {
+          "description": "{algorithm: value}, e.g. {\"sha256\": \"…\"} over the canonicalised (RFC 8785) ref. Re-checkable without the scheme resolver.",
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "type": "string" }
+        },
+        "evidence": {
+          "description": "Optional inline copy of the resolved span (the VC `evidence` pattern) so a verifier WITHOUT store access can still re-check the digest.",
+          "type": "object"
+        }
+      }
+    },
+
+    "intact": {
+      "description": "The integrity pillar — the decision is recorded on a tamper-evident append-only log, linked so a verifier can confirm inclusion + linearity. REUSE-FIRST: prefer an existing transparency-log inclusion proof (Sigstore Rekor, or an RFC 6962 / RFC 9162 Merkle proof) so off-the-shelf verifiers apply; fall back to RVND's native per-folder Ed25519 hash chain only where no log is deployed. `type` names which.",
+      "type": "object",
+      "required": ["type", "log_id", "entry_ref"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "description": "The integrity mechanism, reuse-first. 'rekor' / 'rfc6962' carry a standard inclusion proof; 'native-chain' is RVND's own hash chain.",
+          "enum": ["rekor", "rfc6962", "native-chain"]
+        },
+        "log_id": { "description": "Transparency-log or per-folder chain identity.", "type": "string" },
+        "entry_ref": { "description": "Log index / event id for this decision.", "type": "string" },
+        "inclusion_proof": { "description": "The standard proof when type is rekor/rfc6962 (Merkle inclusion). Absent for native-chain.", "type": "object" },
+        "prev_hash": { "description": "Previous event hash — linearity check for native-chain.", "type": "string" },
+        "algorithm": { "description": "Hash/sig algorithm (e.g. ed25519+sha256).", "type": "string" }
+      }
+    },
+
+    "legitimate": {
+      "description": "The policy-legitimacy pillar — the policy the verdict was evaluated against is itself anchored to real sources (span-norms into instruments), not an ad-hoc rule. `anchors` cite where the governing rules rest.",
+      "type": "object",
+      "required": ["policy_fingerprint"],
+      "additionalProperties": false,
+      "properties": {
+        "policy_id": { "type": "string" },
+        "policy_fingerprint": {
+          "description": "Digest of the effective policy the verdict used (matrix + oversight row + posture).",
+          "type": "string"
+        },
+        "anchors": {
+          "description": "The span-norm/source anchors the governing rules rest on (e.g. instrument + pinpoint, or a grounding ref). May reuse the `grounded` scheme.",
+          "type": "array",
+          "items": { "type": "object" }
+        }
+      }
+    }
+  }
+}
