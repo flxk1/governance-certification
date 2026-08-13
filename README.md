@@ -36,8 +36,8 @@ simultaneously **grounded ∧ overseen ∧ enforced ∧ intact ∧ legitimate**.
 | Pillar | Attests | Reuses (FOSS) | Owns |
 |---|---|---|---|
 | **enforced** | blocked-unless-permitted at runtime | Claude Code PreToolUse/PostToolUse hooks; OPA/Cedar for eval (pluggable) | **the binding** — the certificate is minted only if the gate gated |
-| **overseen** | a qualified human exercised oversight | DSSE + Ed25519 (RFC 8032) + RFC 8785 (JCS) | oversight-certificate disposition semantic (its own repo) |
-| **grounded** | verdict rests on a cited span | PROV-O / RDF-Data-Cube / BFO; RFC 8785 digest | nothing — `scheme` is a URI; 5d+nd is one reference resolver |
+| **overseen** | a qualified human exercised oversight | DSSE + Ed25519 (RFC 8032) + RFC 8785 (JCS) | a portable, DSSE-signed oversight attestation |
+| **grounded** | verdict rests on a cited span | PROV-O / RDF-Data-Cube / BFO; RFC 8785 digest | nothing — `scheme` is a URI; resolvers are external |
 | **intact** | recorded tamper-evidently | Sigstore Rekor / RFC 6962 / RFC 9162 (Trillian) | nothing — reuse an inclusion proof; native chain only as fallback |
 | **legitimate** | policy anchors to real sources | Cedar/OPA/XACML (policy-as-code); ELI/ECLI, Akoma Ntoso, eyecite/EUR-Lex (legal anchors) | nothing — anchors are standard citations |
 
@@ -55,10 +55,10 @@ makes the artifact enforcement-bound. Everything mechanical is composed:
 - **DSSE + in-toto + Sigstore cosign** — the signed envelope, the attestation
   header, and the verify path.
 - **Ed25519 (RFC 8032) + RFC 8785 (JCS)** — signing and canonicalisation.
-- **PROV-O / 5d+nd** — the grounding scheme (pluggable; see below).
+- **PROV-O / RDF-Data-Cube** — the grounding scheme (pluggable; see below).
 - **Rekor / RFC 6962** — the `intact` pillar's inclusion proof.
-- **oversight-certificate** — the `overseen` pillar (its own repo, already DSSE,
-  so it embeds as an in-toto-compatible sub-attestation).
+- **A portable oversight attestation** — the `overseen` pillar (DSSE-signed, so
+  it embeds as an in-toto-compatible sub-attestation).
 
 Out of scope here (they compose on their own standards, not on this schema):
 agent identity / transport (**Web Bot Auth**, RFC 9421), human-delegation
@@ -98,7 +98,7 @@ not a replacement for it.
 
 ## Grounding schemes are pluggable
 
-The `grounded.scheme` field is a URI. `5d+nd`, `7d+nd`, and `prov-o` are
+The `grounded.scheme` field is a URI. `prov-o`, `uri-span`, and `7d+nd` are
 interchangeable *values* of that field — none is privileged by the schema. A
 verifier resolves whichever it understands; `grounded.digest` lets any verifier
 re-check the cited span without understanding the scheme at all. There is no
