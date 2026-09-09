@@ -70,7 +70,7 @@ Offline reference check (stdlib + `cryptography`), given a DSSE envelope and the
 signer's Ed25519 public key in PEM form:
 
 ```bash
-python verify.py certificate.dsse.json --pubkey signer.ed25519.pem
+python -m governance_certification.verify certificate.dsse.json --pubkey signer.ed25519.pem
 # or, once installed:
 govcert-verify certificate.dsse.json --pubkey signer.ed25519.pem
 ```
@@ -78,7 +78,7 @@ govcert-verify certificate.dsse.json --pubkey signer.ed25519.pem
 As a library:
 
 ```python
-from verify import verify
+from governance_certification.verify import verify
 
 report = verify(envelope_dict, verify_sig=my_ed25519_verify)
 # report -> {"ok": bool, "findings": [{"code", "detail"}, ...], "statement": {...}}
@@ -93,7 +93,7 @@ If `jsonschema` is importable, the predicate is additionally validated against
 when it is not.
 
 **In production, verify with Sigstore cosign** — the same DSSE/in-toto envelope
-is what cosign emits and checks. `verify.py` is the minimal offline reference,
+is what cosign emits and checks. `src/governance_certification/verify.py` is the minimal offline reference,
 not a replacement for it.
 
 ## Grounding schemes are pluggable
@@ -110,4 +110,4 @@ Draft spec v1.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — see [LICENSES/MIT.txt](LICENSES/MIT.txt).

@@ -8,14 +8,11 @@ certificate whose ``enforced.blocked_unless_permitted`` is false is rejected as
 """
 import base64
 import json
-import os
-import sys
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-import verify as gv  # noqa: E402
+from governance_certification import verify as gv
 
 
 def _keypair():

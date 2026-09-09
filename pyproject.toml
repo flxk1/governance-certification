@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "governance-certification"
-version = "0.1.0"
+dynamic = ["version"]
 description = "GovernanceCertification v1 — the enforcement-bound oversight-proof predicate schema + a reference verifier."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -15,9 +15,23 @@ dependencies = ["cryptography>=41"]
 
 [project.optional-dependencies]
 schema = ["jsonschema>=4"]
+dev = ["pytest>=7", "jsonschema>=4"]
 
 [project.scripts]
-govcert-verify = "verify:main"
+govcert-verify = "governance_certification.verify:main"
 
 [tool.setuptools]
-py-modules = ["verify"]
+license-files = ["LICENSES/*.txt", "NOTICE"]
+
+[tool.setuptools.dynamic]
+version = { attr = "governance_certification._version.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+governance_certification = ["schema/*.json"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
