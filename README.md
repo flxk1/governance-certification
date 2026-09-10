@@ -2,6 +2,10 @@
 
 In-toto predicate schema and reference verifier for GovernanceCertification, an attestation a runtime gate mints for one governed action.
 
+## Problem
+
+"The action was governed" is a claim with no artifact behind it. One signed attestation per action with five checkable pillars.
+
 ## Install
 
 `pip install "governance-certification[schema] @ git+https://github.com/flxk1/governance-certification"`
@@ -10,6 +14,14 @@ In-toto predicate schema and reference verifier for GovernanceCertification, an 
 
 ```
 govcert-verify certificate.dsse.json --pubkey signer.ed25519.pem
+```
+
+## Example
+
+```
+in : govcert-verify certificate.dsse.json --pubkey signer.ed25519.pem
+     (five pillars: enforced rvnd:PreToolUse · overseen = the oversight-certificate for data_transfer:t1 · grounded = the 5d+nd span digest · intact · legitimate)
+out: OK
 ```
 
 ## Interface
