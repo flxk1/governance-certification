@@ -34,7 +34,7 @@ out: OK
 
 ## Family
 
-Family index of the assurance artifacts. Pillars: grounding [5d-nd](https://github.com/flxk1/5d-nd) · oversight [oversight-certificate](https://github.com/flxk1/oversight-certificate) · enforcement state [enforcement-posture](https://github.com/flxk1/enforcement-posture) · observed effects [effect-reconciliation](https://github.com/flxk1/effect-reconciliation) · source validity [norm-freshness](https://github.com/flxk1/norm-freshness) · attached duties [obligation-discharge](https://github.com/flxk1/obligation-discharge). Catalogue: [loomground/CATALOGUE.md](https://github.com/flxk1/loomground/blob/main/CATALOGUE.md). Detail: [docs/](docs/).
+Family index of the assurance artifacts. Pillars: grounding [5d-nd](https://github.com/flxk1/5d-nd) · oversight [oversight-certificate](https://github.com/flxk1/oversight-certificate) · enforcement state [enforcement-posture](https://github.com/flxk1/enforcement-posture) · observed effects [effect-reconciliation](https://github.com/flxk1/effect-reconciliation) · source validity [norm-freshness](https://github.com/flxk1/norm-freshness) · attached duties [obligation-discharge](https://github.com/flxk1/obligation-discharge) · intact [loomground-audit-chain](https://github.com/flxk1/loomground-audit-chain). Catalogue: [loomground/CATALOGUE.md](https://github.com/flxk1/loomground/blob/main/CATALOGUE.md). Detail: [docs/](docs/).
 
 ## Status
 
