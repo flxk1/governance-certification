@@ -4,8 +4,9 @@
     ".": {
       "release-type": "python",
       "package-name": "governance-certification",
+      "include-component-in-tag": false,
       "changelog-path": "CHANGELOG.md",
-      "version-file": "src/governance_certification/_version.py"
+      "extra-files": ["src/governance_certification/_version.py"]
     }
   }
 }
