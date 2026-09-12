@@ -20,7 +20,7 @@ govcert-verify certificate.dsse.json --pubkey signer.ed25519.pem
 
 ```
 in : govcert-verify certificate.dsse.json --pubkey signer.ed25519.pem
-     (five pillars: enforced rvnd:PreToolUse · overseen = the oversight-certificate for data_transfer:t1 · grounded = the 5d+nd span digest · intact · legitimate)
+     (five pillars: enforced host:PreToolUse · overseen = the oversight-certificate for data_transfer:t1 · grounded = the 5d+nd span digest · intact · legitimate)
 out: OK
 ```
 
