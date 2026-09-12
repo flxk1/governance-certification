@@ -101,13 +101,13 @@
     },
 
     "intact": {
-      "description": "The integrity pillar — the decision is recorded on a tamper-evident append-only log, linked so a verifier can confirm inclusion + linearity. REUSE-FIRST: prefer an existing transparency-log inclusion proof (Sigstore Rekor, or an RFC 6962 / RFC 9162 Merkle proof) so off-the-shelf verifiers apply; fall back to RVND's native per-folder Ed25519 hash chain only where no log is deployed. `type` names which.",
+      "description": "The integrity pillar — the decision is recorded on a tamper-evident append-only log, linked so a verifier can confirm inclusion + linearity. REUSE-FIRST: prefer an existing transparency-log inclusion proof (Sigstore Rekor, or an RFC 6962 / RFC 9162 Merkle proof) so off-the-shelf verifiers apply; fall back to a per-folder Ed25519 hash chain only where no log is deployed. `type` names which.",
       "type": "object",
       "required": ["type", "log_id", "entry_ref"],
       "additionalProperties": false,
       "properties": {
         "type": {
-          "description": "The integrity mechanism, reuse-first. 'rekor' / 'rfc6962' carry a standard inclusion proof; 'native-chain' is RVND's own hash chain.",
+          "description": "The integrity mechanism, reuse-first. 'rekor' / 'rfc6962' carry a standard inclusion proof; 'native-chain' is a host-local hash chain.",
           "enum": ["rekor", "rfc6962", "native-chain"]
         },
         "log_id": { "description": "Transparency-log or per-folder chain identity.", "type": "string" },
