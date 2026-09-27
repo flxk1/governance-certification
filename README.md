@@ -38,7 +38,11 @@ Family index of the assurance artifacts. Pillars: grounding [5d-nd](https://gith
 
 ## Status
 
-Draft spec v1 · package 0.1.0 · 3 tests · Python ≥ 3.9
+Draft spec v1 · package 0.2.0 · 3 tests · Python ≥ 3.9
+
+## How this is made
+
+The code and documentation are written with Loomground agents running on Claude (Anthropic). The maintainer reads and corrects all of it.
 
 ## License
 
