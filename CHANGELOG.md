@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.1](https://github.com/flxk1/governance-certification/compare/v0.2.0...v0.2.1) (2026-09-27)
+
+
+### Documentation
+
+* correct package version; add How this is made ([bae876a](https://github.com/flxk1/governance-certification/commit/bae876a6068298881cb96ac748d5b0b36bee76fa))
+* correct stale claims; add How this is made ([0f03db8](https://github.com/flxk1/governance-certification/commit/0f03db832c3c9fc99e27a67635e2442fdf96bee5))
+* How this is made names no model vendor ([7ca832c](https://github.com/flxk1/governance-certification/commit/7ca832c7a7c5b603fdf23b1af2f2843c84193dad))
+
 ## [0.2.0](https://github.com/flxk1/governance-certification/compare/v0.1.0...v0.2.0) (2026-09-11)
 
 
